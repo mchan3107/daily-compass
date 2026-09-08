@@ -25,7 +25,7 @@ test("creates an account and keeps data private", async ({ page }) => {
   await page.getByLabel("Password").fill("password1");
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page.getByTestId("today-board")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Health / Exercise" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Physical Health" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Morning stretch" })).toHaveCount(0);
 
   await page.getByTestId("add-task-health").click();

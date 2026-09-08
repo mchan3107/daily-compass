@@ -27,7 +27,7 @@ test("keeps an edited task after reload", async ({ page }) => {
 test("keeps a renamed category after reload", async ({ page }) => {
   await signIn(page);
 
-  await page.getByRole("button", { name: "Rename Health / Exercise" }).click();
+  await page.getByRole("button", { name: "Rename Physical Health" }).click();
   await page.getByLabel("Category name").fill("Body");
   await page.getByLabel("Category name").press("Enter");
   await expect(page.getByRole("heading", { name: "Body" })).toBeVisible();

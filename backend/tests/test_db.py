@@ -42,9 +42,9 @@ def test_init_does_not_reseed_existing_database(client):
     renamed = [
         {"id": "health", "label": "Body"},
         {"id": "relationships", "label": "Relationships"},
-        {"id": "growth", "label": "Personal Growth"},
-        {"id": "hobbies", "label": "Hobbies"},
-        {"id": "career", "label": "School / Career"},
+        {"id": "growth", "label": "Mental Wellbeing"},
+        {"id": "hobbies", "label": "Hobbies & Fun"},
+        {"id": "career", "label": "School & Career"},
     ]
     assert (
         client.put("/api/categories", json={"categories": renamed}).status_code

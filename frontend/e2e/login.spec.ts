@@ -7,7 +7,7 @@ test("shows login instead of the board when signed out", async ({ page }) => {
   await page.goto("/");
 
   await expect(page.getByTestId("login-form")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Health / Exercise" })).toHaveCount(
+  await expect(page.getByRole("heading", { name: "Physical Health" })).toHaveCount(
     0,
   );
 });
@@ -28,7 +28,7 @@ test("stays signed in after reload", async ({ page }) => {
   await page.reload();
   await expect(page.getByTestId("today-board")).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Health / Exercise" }),
+    page.getByRole("heading", { name: "Physical Health" }),
   ).toBeVisible();
 });
 
@@ -38,7 +38,7 @@ test("signs in and logs out", async ({ page }) => {
 
   await page.getByRole("button", { name: "Log out" }).click();
   await expect(page.getByTestId("login-form")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Health / Exercise" })).toHaveCount(
+  await expect(page.getByRole("heading", { name: "Physical Health" })).toHaveCount(
     0,
   );
 });

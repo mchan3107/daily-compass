@@ -2,11 +2,11 @@ from tests.helpers import sign_in
 
 DEFAULT_IDS = ["health", "relationships", "growth", "hobbies", "career"]
 DEFAULT_LABELS = [
-    "Health / Exercise",
+    "Physical Health",
     "Relationships",
-    "Personal Growth",
-    "Hobbies",
-    "School / Career",
+    "Mental Wellbeing",
+    "Hobbies & Fun",
+    "School & Career",
 ]
 
 
@@ -17,11 +17,11 @@ def test_categories_require_session(client):
             "/api/categories",
             json={
                 "categories": [
-                    {"id": "health", "label": "Health / Exercise"},
+                    {"id": "health", "label": "Physical Health"},
                     {"id": "relationships", "label": "Relationships"},
-                    {"id": "growth", "label": "Personal Growth"},
-                    {"id": "hobbies", "label": "Hobbies"},
-                    {"id": "career", "label": "School / Career"},
+                    {"id": "growth", "label": "Mental Wellbeing"},
+                    {"id": "hobbies", "label": "Hobbies & Fun"},
+                    {"id": "career", "label": "School & Career"},
                 ]
             },
         ).status_code
@@ -43,10 +43,10 @@ def test_rename_and_reorder_categories(client):
     body = {
         "categories": [
             {"id": "career", "label": "Work"},
-            {"id": "health", "label": "Health / Exercise"},
+            {"id": "health", "label": "Physical Health"},
             {"id": "relationships", "label": "Relationships"},
-            {"id": "growth", "label": "Personal Growth"},
-            {"id": "hobbies", "label": "Hobbies"},
+            {"id": "growth", "label": "Mental Wellbeing"},
+            {"id": "hobbies", "label": "Hobbies & Fun"},
         ]
     }
     put = client.put("/api/categories", json=body)
@@ -66,11 +66,11 @@ def test_rejects_adding_a_category(client):
     sign_in(client)
     extra = {
         "categories": [
-            {"id": "health", "label": "Health / Exercise"},
+            {"id": "health", "label": "Physical Health"},
             {"id": "relationships", "label": "Relationships"},
-            {"id": "growth", "label": "Personal Growth"},
-            {"id": "hobbies", "label": "Hobbies"},
-            {"id": "career", "label": "School / Career"},
+            {"id": "growth", "label": "Mental Wellbeing"},
+            {"id": "hobbies", "label": "Hobbies & Fun"},
+            {"id": "career", "label": "School & Career"},
             {"id": "extra", "label": "Nope"},
         ]
     }
@@ -81,10 +81,10 @@ def test_rejects_removing_a_category(client):
     sign_in(client)
     missing = {
         "categories": [
-            {"id": "health", "label": "Health / Exercise"},
+            {"id": "health", "label": "Physical Health"},
             {"id": "relationships", "label": "Relationships"},
-            {"id": "growth", "label": "Personal Growth"},
-            {"id": "hobbies", "label": "Hobbies"},
+            {"id": "growth", "label": "Mental Wellbeing"},
+            {"id": "hobbies", "label": "Hobbies & Fun"},
         ]
     }
     assert client.put("/api/categories", json=missing).status_code == 400

@@ -30,17 +30,17 @@ test("shows today header, five categories, and dummy tasks", async ({
     page.getByRole("heading", { name: "Daily Compass" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Health / Exercise" }),
+    page.getByRole("heading", { name: "Physical Health" }),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Relationships" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Personal Growth" }),
+    page.getByRole("heading", { name: "Mental Wellbeing" }),
   ).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Hobbies" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Hobbies & Fun" })).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "School / Career" }),
+    page.getByRole("heading", { name: "School & Career" }),
   ).toBeVisible();
   await expect(page.getByRole("heading", { name: "Morning stretch" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Call Mom" })).toBeVisible();
@@ -182,7 +182,7 @@ test("navigates previous, next, and picked dates", async ({ page }) => {
 test("renames and reorders categories across days", async ({ page }) => {
   await signIn(page);
 
-  await page.getByRole("button", { name: "Rename Health / Exercise" }).click();
+  await page.getByRole("button", { name: "Rename Physical Health" }).click();
   await page.getByLabel("Category name").fill("Body");
   await page.getByLabel("Category name").press("Enter");
   await expect(page.getByRole("heading", { name: "Body" })).toBeVisible();
@@ -193,9 +193,9 @@ test("renames and reorders categories across days", async ({ page }) => {
   ).toEqual([
     "Relationships",
     "Body",
-    "Personal Growth",
-    "Hobbies",
-    "School / Career",
+    "Mental Wellbeing",
+    "Hobbies & Fun",
+    "School & Career",
   ]);
 
   await page.getByTestId("next-day").click();
@@ -205,8 +205,8 @@ test("renames and reorders categories across days", async ({ page }) => {
   ).toEqual([
     "Relationships",
     "Body",
-    "Personal Growth",
-    "Hobbies",
-    "School / Career",
+    "Mental Wellbeing",
+    "Hobbies & Fun",
+    "School & Career",
   ]);
 });

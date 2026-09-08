@@ -8,7 +8,7 @@ This project is building a personal daily planning app. Key features:
 - When signed in, the user sees Today by default
 - The user can open other days with previous/next day navigation and a date picker
 - Each day contains tasks organized into life categories
-- There are exactly five categories. The default names are Health / Exercise, Relationships, Personal Growth, Hobbies, and School / Career
+- There are exactly five categories. The default names are Physical Health, Relationships, Mental Wellbeing, Hobbies & Fun, and School & Career
 - Tasks can be created, edited, deleted, completed, reordered, and moved between categories with drag and drop
 - Tasks stay on the day they were created
 - Categories can be renamed and reordered. Categories cannot be added or deleted in the MVP

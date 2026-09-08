@@ -46,7 +46,7 @@ export async function signIn(page: Page) {
   await page.reload();
   await expect(page.getByTestId("today-board")).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Health / Exercise" }),
+    page.getByRole("heading", { name: "Physical Health" }),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Morning stretch" }),

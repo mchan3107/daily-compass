@@ -3,11 +3,11 @@ import copy
 CATEGORY_IDS = ("health", "relationships", "growth", "hobbies", "career")
 
 DEFAULT_CATEGORIES = (
-    ("health", "Health / Exercise"),
+    ("health", "Physical Health"),
     ("relationships", "Relationships"),
-    ("growth", "Personal Growth"),
-    ("hobbies", "Hobbies"),
-    ("career", "School / Career"),
+    ("growth", "Mental Wellbeing"),
+    ("hobbies", "Hobbies & Fun"),
+    ("career", "School & Career"),
 )
 
 DUMMY_BOARD = {

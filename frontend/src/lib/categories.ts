@@ -1,11 +1,11 @@
 import type { Category, CategoryId } from "./types";
 
 export const CATEGORIES: Category[] = [
-  { id: "health", label: "Health / Exercise" },
+  { id: "health", label: "Physical Health" },
   { id: "relationships", label: "Relationships" },
-  { id: "growth", label: "Personal Growth" },
-  { id: "hobbies", label: "Hobbies" },
-  { id: "career", label: "School / Career" },
+  { id: "growth", label: "Mental Wellbeing" },
+  { id: "hobbies", label: "Hobbies & Fun" },
+  { id: "career", label: "School & Career" },
 ];
 
 export const CATEGORY_IDS = CATEGORIES.map((category) => category.id);

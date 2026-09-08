@@ -11,3 +11,5 @@ frontend/.next
 frontend/out
 frontend/test-results
 frontend/tsconfig.tsbuildinfo
+backend/data
+**/*.db

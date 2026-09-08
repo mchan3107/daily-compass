@@ -114,11 +114,11 @@ When the database file is created:
 
 | `id` | `label` | `sort_order` |
 | --- | --- | --- |
-| `health` | Health / Exercise | 0 |
+| `health` | Physical Health | 0 |
 | `relationships` | Relationships | 1 |
-| `growth` | Personal Growth | 2 |
-| `hobbies` | Hobbies | 3 |
-| `career` | School / Career | 4 |
+| `growth` | Mental Wellbeing | 2 |
+| `hobbies` | Hobbies & Fun | 3 |
+| `career` | School & Career | 4 |
 
 3. Do **not** seed a day row at create time using the server clock. Docker and the browser can disagree on "today". Instead, on the first `GET` day for the demo user (`user@example.com`), if they still have zero `days` rows, insert the dummy board for the date the client asked for. That puts the seed on the demo user's Today. Accounts created with signup start with empty days.
 
