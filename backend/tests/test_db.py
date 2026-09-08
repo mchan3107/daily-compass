@@ -12,10 +12,10 @@ def test_init_creates_and_seeds_database(tmp_path, monkeypatch):
     path = db_path()
     assert path.exists()
     conn = sqlite3.connect(path)
-    username, password_hash = conn.execute(
-        "SELECT username, password_hash FROM users"
+    email, password_hash = conn.execute(
+        "SELECT email, password_hash FROM users"
     ).fetchone()
-    assert username == "user"
+    assert email == "user@example.com"
     assert password_hash != "password"
     assert verify_password("password", password_hash)
 
@@ -54,3 +54,46 @@ def test_init_does_not_reseed_existing_database(client):
     init_db()
     labels = [row["label"] for row in client.get("/api/categories").json()["categories"]]
     assert labels[0] == "Body"
+
+
+def test_init_renames_legacy_username_column(tmp_path, monkeypatch):
+    path = tmp_path / "legacy.db"
+    monkeypatch.setenv("COMPASS_DB", str(path))
+    conn = sqlite3.connect(path)
+    conn.executescript(
+        """
+        CREATE TABLE users (
+            id INTEGER PRIMARY KEY,
+            username TEXT NOT NULL UNIQUE,
+            password_hash TEXT NOT NULL
+        );
+        CREATE TABLE categories (
+            user_id INTEGER NOT NULL,
+            id TEXT NOT NULL,
+            label TEXT NOT NULL,
+            sort_order INTEGER NOT NULL,
+            PRIMARY KEY (user_id, id)
+        );
+        CREATE TABLE days (
+            user_id INTEGER NOT NULL,
+            date TEXT NOT NULL,
+            board TEXT NOT NULL,
+            PRIMARY KEY (user_id, date)
+        );
+        """
+    )
+    conn.execute(
+        "INSERT INTO users (username, password_hash) VALUES (?, ?)",
+        ("user", "salt:hash"),
+    )
+    conn.commit()
+    conn.close()
+
+    init_db()
+    conn = sqlite3.connect(path)
+    columns = [row[1] for row in conn.execute("PRAGMA table_info(users)")]
+    assert "email" in columns
+    assert "username" not in columns
+    email = conn.execute("SELECT email FROM users").fetchone()[0]
+    assert email == "user@example.com"
+    conn.close()

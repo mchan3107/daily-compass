@@ -16,7 +16,7 @@ This project is building a personal daily planning app. Key features:
 
 ## Limitations
 
-For the MVP, there will only be a user sign in (hardcoded to `user` and `password`) but the database will support multiple users for future.
+Users sign up and sign in with email and password (at least 8 characters). Passwords are stored as PBKDF2-SHA256 hashes. Each user only sees their own categories and days. A demo account `user@example.com` / `password` is seeded for local use.
 
 For the MVP, unfinished tasks will not automatically roll over to the next day.
 
@@ -38,7 +38,7 @@ For the MVP, this will run locally in a Docker container.
 - Automated tests mock OpenRouter except for one real connectivity check
 - Use SQLite local database for the database, creating a new db if it doesn't exist
 - Seed a small set of dummy tasks for the fake user across the five life categories
-- Auth is a simple session/cookie gate with hardcoded `user` / `password` first, then connected to SQLite user data
+- Auth is an http-only session cookie. Signup and login use email plus a hashed password against SQLite.
 - Use drag and drop for reordering tasks and moving tasks between categories
 - Start and Stop server scripts for Mac, PC, Linux in `scripts/`
 

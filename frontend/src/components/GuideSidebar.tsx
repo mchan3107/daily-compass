@@ -49,11 +49,11 @@ export function GuideSidebar({ date, onBoard }: GuideSidebarProps) {
     >
       <header className="mb-3 border-b border-sage/30 pb-3">
         <p className="text-xs font-medium tracking-[0.2em] text-gold uppercase">
-          Guide
+          AI Chat
         </p>
         <h2 className="mt-1 font-serif text-2xl text-forest">This day</h2>
         <p className="mt-1 text-sm text-warm-gray">
-          A planning companion for the open day only.
+          Chat with AI about the day you have open.
         </p>
       </header>
       <div
@@ -63,8 +63,8 @@ export function GuideSidebar({ date, onBoard }: GuideSidebarProps) {
       >
         {messages.length === 0 && !pending ? (
           <p data-testid="guide-empty" className="text-sm text-warm-gray">
-            Ask about this day. I can help you prioritize, add, or reshape
-            tasks here.
+            Ask the AI about this day. It can help you prioritize, add, or
+            reshape tasks here.
           </p>
         ) : null}
         {messages.map((message, index) => (
@@ -87,7 +87,7 @@ export function GuideSidebar({ date, onBoard }: GuideSidebarProps) {
       </div>
       <form onSubmit={handleSubmit} className="mt-3 flex flex-col gap-2">
         <label className="sr-only" htmlFor="guide-input">
-          Message the planning guide
+          Message the AI chat
         </label>
         <textarea
           id="guide-input"

@@ -8,6 +8,8 @@ from pydantic import BaseModel, Field
 
 from app.board import BadInput, NotFound
 from app.db import (
+    DuplicateEmail,
+    create_user,
     get_day,
     get_user,
     init_db,
@@ -41,8 +43,8 @@ async def lifespan(_app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
-class LoginBody(BaseModel):
-    username: str
+class AuthBody(BaseModel):
+    email: str
     password: str
 
 
@@ -70,15 +72,15 @@ class ChatBody(BaseModel):
 
 
 def is_authenticated(request: Request) -> bool:
-    username = request.cookies.get(SESSION_COOKIE)
-    return bool(username) and get_user(username) is not None
+    email = request.cookies.get(SESSION_COOKIE)
+    return bool(email) and get_user(email) is not None
 
 
 def current_user(request: Request) -> str:
-    username = request.cookies.get(SESSION_COOKIE)
-    if not username or get_user(username) is None:
+    email = request.cookies.get(SESSION_COOKIE)
+    if not email or get_user(email) is None:
         raise HTTPException(status_code=401, detail="Not signed in")
-    return username
+    return email
 
 
 def parse_date(value: str) -> str:
@@ -99,14 +101,31 @@ def session_status(request: Request) -> dict[str, bool]:
     return {"authenticated": is_authenticated(request)}
 
 
-@app.post("/api/login")
-def login(body: LoginBody, response: Response) -> dict[str, bool]:
-    user = get_user(body.username)
-    if user is None or not verify_password(body.password, user["password_hash"]):
-        raise HTTPException(status_code=401, detail="Invalid username or password")
+@app.post("/api/signup")
+def signup(body: AuthBody, response: Response) -> dict[str, bool]:
+    try:
+        email = create_user(body.email, body.password)
+    except DuplicateEmail as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    except BadInput as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     response.set_cookie(
         SESSION_COOKIE,
-        user["username"],
+        email,
+        httponly=True,
+        samesite="lax",
+    )
+    return {"ok": True}
+
+
+@app.post("/api/login")
+def login(body: AuthBody, response: Response) -> dict[str, bool]:
+    user = get_user(body.email)
+    if user is None or not verify_password(body.password, user["password_hash"]):
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    response.set_cookie(
+        SESSION_COOKIE,
+        user["email"],
         httponly=True,
         samesite="lax",
     )
@@ -115,9 +134,9 @@ def login(body: LoginBody, response: Response) -> dict[str, bool]:
 
 @app.post("/api/logout")
 def logout(request: Request, response: Response) -> dict[str, bool]:
-    username = request.cookies.get(SESSION_COOKIE)
-    if username:
-        clear_history(username)
+    email = request.cookies.get(SESSION_COOKIE)
+    if email:
+        clear_history(email)
     response.delete_cookie(SESSION_COOKIE)
     return {"ok": True}
 

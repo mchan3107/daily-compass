@@ -42,7 +42,7 @@ src/test/         Vitest setup
 e2e/              Playwright specs
 ```
 
-`src/app/page.tsx` renders `AuthGate`. Login is checked with `GET /api/session`. Credentials are `user` / `password`. The http-only session cookie is set by FastAPI.
+`src/app/page.tsx` renders `AuthGate`. Login is checked with `GET /api/session`. Users sign up or sign in with email and password. The demo account is `user@example.com` / `password`. The http-only session cookie is set by FastAPI.
 
 ## Data model
 
@@ -71,7 +71,7 @@ e2e/              Playwright specs
 Keep the cream / forest / sage / gold look in `src/app/globals.css`. Headings use Fraunces; body uses Source Sans 3.
 
 - `AuthGate`: login or the today board
-- `LoginForm`: username / password
+- `LoginForm`: email / password sign-in and signup
 - `TodayHeader`: title, prev/next, date picker, log out.
 - `TodayBoard`: five columns, dnd-kit, CRUD, day state, category rename/reorder, planning guide sidebar.
 - `GuideSidebar`: session chat for the open day; applies a returned board immediately.
@@ -80,7 +80,7 @@ Keep the cream / forest / sage / gold look in `src/app/globals.css`. Headings us
 - `TaskCard`: checkbox, title, details, move-to-date, edit, delete.
 - `TaskForm`: title (required) and details.
 
-Test ids: `login-form`, `logout`, `today-board`, `column-{categoryId}`, `add-task-{categoryId}`, `task-{id}`, `drag-{id}`, `prev-day`, `next-day`, `date-picker`, `move-date-{id}`, `guide-sidebar`, `guide-messages`, `guide-input`, `guide-send`, `guide-empty`, `guide-message`.
+Test ids: `login-form`, `signup-form`, `logout`, `today-board`, `column-{categoryId}`, `add-task-{categoryId}`, `task-{id}`, `drag-{id}`, `prev-day`, `next-day`, `date-picker`, `move-date-{id}`, `guide-sidebar`, `guide-messages`, `guide-input`, `guide-send`, `guide-empty`, `guide-message`.
 
 ## Tests
 
@@ -88,6 +88,7 @@ Test ids: `login-form`, `logout`, `today-board`, `column-{categoryId}`, `add-tas
 - `src/components/*.test.tsx`: TaskCard, TaskForm, TodayHeader, CategoryColumn, GuideSidebar
 - `e2e/today.spec.ts`: signs in, then header, categories, dummy tasks, CRUD, drag, day nav, rename/reorder, move-to-date
 - `e2e/login.spec.ts`: login required, bad password, logout
+- `e2e/signup.spec.ts`: create account, short password, data stays private per user
 - `e2e/persist.spec.ts`: edit/rename/day nav survive reload
 - `e2e/guide.spec.ts`: mocked chat reply, board update, logout clears messages
 

@@ -15,10 +15,12 @@ SQLite file: `backend/data/compass.db`. Create the parent directory and the file
 | Column | Type | Notes |
 | --- | --- | --- |
 | `id` | INTEGER | Primary key |
-| `username` | TEXT | Unique, not empty |
+| `email` | TEXT | Unique, not empty, stored lowercase |
 | `password_hash` | TEXT | PBKDF2-SHA256 hash with a random salt. Never store plaintext |
 
-The schema supports many users. The MVP seeds one row: username `user`, password `password` (stored hashed). Part 6 login looks up this table and verifies the hash. The session cookie can keep storing the username (`user`); there is no sessions table.
+The schema supports many users. A demo account is seeded: email `user@example.com`, password `password` (stored hashed). Login and signup look up this table and verify the hash. The session cookie stores the email; there is no sessions table.
+
+Older databases that used `username` are renamed to `email` on startup. A leftover seed username of `user` is rewritten to `user@example.com`.
 
 AI chat history is not stored.
 
@@ -108,7 +110,7 @@ Unfinished tasks do not roll over. Other days stay empty until the user (or seed
 
 When the database file is created:
 
-1. Insert user `user` with a hash of password `password`.
+1. Insert user `user@example.com` with a hash of password `password`.
 2. Insert that user's five categories:
 
 | `id` | `label` | `sort_order` |
@@ -119,7 +121,7 @@ When the database file is created:
 | `hobbies` | Hobbies | 3 |
 | `career` | School / Career | 4 |
 
-3. Do **not** seed a day row at create time using the server clock. Docker and the browser can disagree on "today". Instead, on the first `GET` day for this user, if they still have zero `days` rows, insert the dummy board for the date the client asked for. That puts the seed on the user's Today.
+3. Do **not** seed a day row at create time using the server clock. Docker and the browser can disagree on "today". Instead, on the first `GET` day for the demo user (`user@example.com`), if they still have zero `days` rows, insert the dummy board for the date the client asked for. That puts the seed on the demo user's Today. Accounts created with signup start with empty days.
 
 Dummy board content matches `frontend/src/lib/dummy-tasks.ts` (same titles, details, ids, all `completed: false`, at least one task in every category). After that first GET, later dates stay empty until the user adds tasks or moves a task there.
 
@@ -129,7 +131,7 @@ If the file already exists, do not re-seed. Tests use a temp SQLite file so they
 
 ## Out of scope
 
-- Sessions table (cookie value is the username)
+- Sessions table (cookie value is the email)
 - Tasks table
 - AI conversation history
 - Rolling unfinished tasks to the next day
@@ -140,8 +142,12 @@ If the file already exists, do not re-seed. Tests use a temp SQLite file so they
 
 ## API
 
-All of these except login/logout/hello/session require a valid session. The session username must exist in `users`.
+All of these except signup/login/logout/hello/session require a valid session. The session email must exist in `users`.
 
+- `POST /api/signup` — `{ "email", "password" }` (password at least 8 characters). Sets the session cookie.
+- `POST /api/login` — `{ "email", "password" }`. Sets the session cookie.
+- `POST /api/logout` — clears the session cookie and in-memory chat history
+- `GET /api/session` — `{ "authenticated": true|false }`
 - `GET /api/categories` — `{ "categories": [{ "id", "label" }, ...] }` in display order
 - `PUT /api/categories` — same body; rename/reorder only
 - `GET /api/days/{date}` — `{ "date", "board" }`; empty if missing; may seed dummy on first GET

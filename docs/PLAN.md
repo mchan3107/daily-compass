@@ -116,14 +116,14 @@ Propose the SQLite schema. Do not implement it until the user signs off.
 - [x] Write `docs/DATABASE.md` with tables, columns, JSON usage, and seed plan
 - [x] Cover users, user life categories, calendar days, and tasks
 - [x] Keep task/day data simple; use JSON where it avoids extra tables
-- [x] Support multiple users in the schema even though MVP login is one hardcoded user
+- [x] Support multiple users in the schema; signup and login use email plus a hashed password
 - [x] Describe how a day is loaded/saved and how moving a task to another date works
 - [x] Describe the small dummy seed for the fake user
 - [x] Wait for user sign-off before Part 6
 
 Suggested shape to refine in `docs/DATABASE.md` (not final until sign-off):
 
-- `users`: id, username, password hash (or placeholder for the dummy user)
+- `users`: id, email, password hash
 - `categories`: user_id, stable id (`health`, …), label, sort order — always five rows per user
 - `days`: user_id, date, JSON board payload (tasks grouped by category, including order and completion)
 

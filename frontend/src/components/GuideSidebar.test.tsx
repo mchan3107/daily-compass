@@ -18,11 +18,14 @@ describe("GuideSidebar", () => {
   it("shows planning-guide empty copy", () => {
     render(<GuideSidebar date="2026-09-07" onBoard={() => undefined} />);
 
+    expect(screen.getByText("AI Chat")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "This day" })).toBeInTheDocument();
     expect(
-      screen.getByText(/Ask about this day. I can help you prioritize/),
+      screen.getByText("Chat with AI about the day you have open."),
     ).toBeInTheDocument();
-    expect(screen.queryByText(/chatbot/i)).not.toBeInTheDocument();
+    expect(
+      screen.getByText(/Ask the AI about this day. It can help you prioritize/),
+    ).toBeInTheDocument();
   });
 
   it("renders a reply after send", async () => {
@@ -34,7 +37,7 @@ describe("GuideSidebar", () => {
 
     render(<GuideSidebar date="2026-09-07" onBoard={() => undefined} />);
     await user.type(
-      screen.getByLabelText("Message the planning guide"),
+      screen.getByLabelText("Message the AI chat"),
       "What first?",
     );
     await user.click(screen.getByRole("button", { name: "Send" }));
@@ -67,7 +70,7 @@ describe("GuideSidebar", () => {
 
     render(<GuideSidebar date="2026-09-07" onBoard={onBoard} />);
     await user.type(
-      screen.getByLabelText("Message the planning guide"),
+      screen.getByLabelText("Message the AI chat"),
       "Add a walk tonight.",
     );
     await user.click(screen.getByRole("button", { name: "Send" }));

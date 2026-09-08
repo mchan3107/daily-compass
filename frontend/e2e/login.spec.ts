@@ -15,11 +15,11 @@ test("shows login instead of the board when signed out", async ({ page }) => {
 test("rejects a bad password", async ({ page }) => {
   await page.goto("/");
 
-  await page.getByLabel("Username").fill("user");
+  await page.getByLabel("Email").fill("user@example.com");
   await page.getByLabel("Password").fill("wrong");
   await page.getByRole("button", { name: "Sign in" }).click();
 
-  await expect(page.getByText("Invalid username or password")).toBeVisible();
+  await expect(page.getByText("Invalid email or password")).toBeVisible();
   await expect(page.getByTestId("login-form")).toBeVisible();
 });
 

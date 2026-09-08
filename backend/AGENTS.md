@@ -2,7 +2,7 @@
 
 FastAPI app served from one Docker container. It serves the statically exported Next.js frontend at `/`, plus the Daily Compass JSON API.
 
-Login is `user` / `password` against the `users` table. The password is stored as a PBKDF2-SHA256 hash. The session cookie is http-only and holds the username.
+Signup and login use email plus password against the `users` table. Passwords are stored as a PBKDF2-SHA256 hash (minimum 8 characters). The session cookie is http-only and holds the email. A demo user `user@example.com` / `password` is seeded. New accounts get the five default categories and empty days.
 
 SQLite file: `backend/data/compass.db` (or `COMPASS_DB`). Created and seeded on startup if missing. Schema: `docs/DATABASE.md`.
 
