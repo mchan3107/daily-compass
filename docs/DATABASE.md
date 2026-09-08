@@ -147,3 +147,4 @@ All of these except login/logout/hello/session require a valid session. The sess
 - `GET /api/days/{date}` — `{ "date", "board" }`; empty if missing; may seed dummy on first GET
 - `PUT /api/days/{date}` — `{ "board": ... }`
 - `POST /api/days/{date}/move-task` — `{ "taskId", "toDate" }` in one transaction
+- `POST /api/chat` — `{ "date", "message" }` returns `{ "reply", "board" }`. `board` is a full replacement of that day or `null`. History is in memory and cleared on logout.

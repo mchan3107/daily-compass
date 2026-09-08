@@ -160,13 +160,22 @@ test("navigates previous, next, and picked dates", async ({ page }) => {
 
   await page.getByTestId("next-day").click();
   await expect(page.getByText("Today", { exact: true })).toHaveCount(0);
+  await expect(page.getByTestId("today-board")).not.toHaveAttribute(
+    "data-date",
+    dateKey(),
+  );
   await expect(page.getByRole("heading", { name: "Morning stretch" })).toHaveCount(0);
 
   await page.getByTestId("prev-day").click();
   await expect(page.getByText("Today", { exact: true })).toBeVisible();
+  await expect(page.getByTestId("today-board")).toHaveAttribute("data-date", dateKey());
   await expect(page.getByRole("heading", { name: "Morning stretch" })).toBeVisible();
 
   await page.getByTestId("date-picker").fill(shift(dateKey(), 1));
+  await expect(page.getByTestId("today-board")).not.toHaveAttribute(
+    "data-date",
+    dateKey(),
+  );
   await expect(page.getByRole("heading", { name: "Morning stretch" })).toHaveCount(0);
 });
 

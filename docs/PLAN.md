@@ -164,14 +164,14 @@ Implement the signed-off schema and Daily Compass API.
 
 Replace dummy local data with the API.
 
-- [ ] Load the open day and categories from the API after login
-- [ ] Persist task create/edit/delete/complete/reorder/move-category
-- [ ] Persist category rename/reorder
-- [ ] Persist day navigation (load that date's board)
-- [ ] Persist move-to-another-date
-- [ ] Keep UI behavior from Part 3
-- [ ] Unit tests for the API client
-- [ ] Playwright against the running Docker app: login, edit a task, reload, data still there; rename category and reload; change day and back
+- [x] Load the open day and categories from the API after login
+- [x] Persist task create/edit/delete/complete/reorder/move-category
+- [x] Persist category rename/reorder
+- [x] Persist day navigation (load that date's board)
+- [x] Persist move-to-another-date
+- [x] Keep UI behavior from Part 3
+- [x] Unit tests for the API client
+- [x] Playwright against the running Docker app: login, edit a task, reload, data still there; rename category and reload; change day and back
 
 **Tests / success criteria**
 
@@ -186,11 +186,11 @@ Replace dummy local data with the API.
 
 Prove OpenRouter works from the backend.
 
-- [ ] Read `OPENROUTER_API_KEY` from the environment
-- [ ] Backend helper that calls OpenRouter with `nvidia/nemotron-3-ultra-550b-a55b:free`
-- [ ] One manual or explicitly marked real request: prompt `2+2`, confirm a sensible reply
-- [ ] `GET` or `POST` a tiny debug/connectivity path is optional; keep it simple
-- [ ] Default automated tests mock the HTTP call to OpenRouter
+- [x] Read `OPENROUTER_API_KEY` from the environment
+- [x] Backend helper that calls OpenRouter with `nvidia/nemotron-3-ultra-550b-a55b:free`
+- [x] One manual or explicitly marked real request: prompt `2+2`, confirm a sensible reply
+- [x] `GET` or `POST` a tiny debug/connectivity path is optional; keep it simple
+- [x] Default automated tests mock the HTTP call to OpenRouter
 
 **Tests / success criteria**
 
@@ -203,13 +203,13 @@ Prove OpenRouter works from the backend.
 
 Turn the model into a planning guide for the open day.
 
-- [ ] Chat endpoint sends: open day's full task data, user's categories, user question, session conversation history
-- [ ] System prompt: Daily Compass planning guide (prioritize, create, edit, complete, reorder, move within the open day)
-- [ ] Response: assistant message plus optional full replacement of that day's board
-- [ ] If a replacement board is present, save it for that user/date
-- [ ] History stays in memory for the session only
-- [ ] Do not let the model add/delete categories or change other days
-- [ ] Unit tests with a mocked model: no board change; valid board replacement persisted; malformed replacement ignored; history included on follow-up
+- [x] Chat endpoint sends: open day's full task data, user's categories, user question, session conversation history
+- [x] System prompt: Daily Compass planning guide (prioritize, create, edit, complete, reorder, move within the open day)
+- [x] Response: assistant message plus optional full replacement of that day's board
+- [x] If a replacement board is present, save it for that user/date
+- [x] History stays in memory for the session only
+- [x] Do not let the model add/delete categories or change other days
+- [x] Unit tests with a mocked model: no board change; valid board replacement persisted; malformed replacement ignored; history included on follow-up
 
 **Tests / success criteria**
 
@@ -223,12 +223,12 @@ Turn the model into a planning guide for the open day.
 
 Add the chat UI and wire it to Part 9.
 
-- [ ] Polished sidebar on the Daily Compass board, matching cream / forest / sage / gold
-- [ ] Full conversation in the session: send, receive, scroll, keep history until logout/refresh
-- [ ] On a board replacement, refresh the open day's tasks without a manual reload
-- [ ] Copy and empty states should feel like a planning guide, not a generic chatbot
-- [ ] Frontend unit tests for rendering messages and applying an updated board
-- [ ] Playwright: open sidebar, send a message (mock AI in e2e), see the reply; if the mock returns a new task, the board updates
+- [x] Polished sidebar on the Daily Compass board, matching cream / forest / sage / gold
+- [x] Full conversation in the session: send, receive, scroll, keep history until logout/refresh
+- [x] On a board replacement, refresh the open day's tasks without a manual reload
+- [x] Copy and empty states should feel like a planning guide, not a generic chatbot
+- [x] Frontend unit tests for rendering messages and applying an updated board
+- [x] Playwright: open sidebar, send a message (mock AI in e2e), see the reply; if the mock returns a new task, the board updates
 
 **Tests / success criteria**
 

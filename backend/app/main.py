@@ -16,6 +16,8 @@ from app.db import (
     put_day,
     replace_categories,
 )
+from app.guide import clear_history, run_turn
+from app.openrouter import OpenRouterError
 from app.passwords import verify_password
 
 SESSION_COOKIE = "session"
@@ -60,6 +62,11 @@ class BoardBody(BaseModel):
 class MoveBody(BaseModel):
     taskId: str = Field(min_length=1)
     toDate: str
+
+
+class ChatBody(BaseModel):
+    date: str
+    message: str = Field(min_length=1)
 
 
 def is_authenticated(request: Request) -> bool:
@@ -107,7 +114,10 @@ def login(body: LoginBody, response: Response) -> dict[str, bool]:
 
 
 @app.post("/api/logout")
-def logout(response: Response) -> dict[str, bool]:
+def logout(request: Request, response: Response) -> dict[str, bool]:
+    username = request.cookies.get(SESSION_COOKIE)
+    if username:
+        clear_history(username)
     response.delete_cookie(SESSION_COOKIE)
     return {"ok": True}
 
@@ -156,6 +166,15 @@ def write_move(
     except NotFound as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     return {"ok": True}
+
+
+@app.post("/api/chat")
+def write_chat(body: ChatBody, username: Annotated[str, Depends(current_user)]):
+    parse_date(body.date)
+    try:
+        return run_turn(username, body.date, body.message)
+    except OpenRouterError as exc:
+        raise HTTPException(status_code=502, detail="AI is unavailable") from exc
 
 
 app.frontend("/", directory=STATIC_DIR)
