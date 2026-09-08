@@ -113,13 +113,13 @@ Gate the app behind dummy credentials before the database exists.
 
 Propose the SQLite schema. Do not implement it until the user signs off.
 
-- [ ] Write `docs/DATABASE.md` with tables, columns, JSON usage, and seed plan
-- [ ] Cover users, user life categories, calendar days, and tasks
-- [ ] Keep task/day data simple; use JSON where it avoids extra tables
-- [ ] Support multiple users in the schema even though MVP login is one hardcoded user
-- [ ] Describe how a day is loaded/saved and how moving a task to another date works
-- [ ] Describe the small dummy seed for the fake user
-- [ ] Wait for user sign-off before Part 6
+- [x] Write `docs/DATABASE.md` with tables, columns, JSON usage, and seed plan
+- [x] Cover users, user life categories, calendar days, and tasks
+- [x] Keep task/day data simple; use JSON where it avoids extra tables
+- [x] Support multiple users in the schema even though MVP login is one hardcoded user
+- [x] Describe how a day is loaded/saved and how moving a task to another date works
+- [x] Describe the small dummy seed for the fake user
+- [x] Wait for user sign-off before Part 6
 
 Suggested shape to refine in `docs/DATABASE.md` (not final until sign-off):
 
@@ -139,15 +139,15 @@ Suggested shape to refine in `docs/DATABASE.md` (not final until sign-off):
 
 Implement the signed-off schema and Daily Compass API.
 
-- [ ] Create the SQLite database automatically if missing
-- [ ] Seed the dummy user and dummy Today tasks on first create
-- [ ] Session login checks the users table (still `user` / `password`)
-- [ ] `GET` / `PUT` the open day for the signed-in user
-- [ ] `GET` / `PUT` the user's five categories (rename + reorder only)
-- [ ] Move a task between categories (or include that in the day save)
-- [ ] Move a task to another date
-- [ ] All mutating routes require a valid session
-- [ ] Backend unit tests with a temp SQLite file, no Docker required for the unit suite
+- [x] Create the SQLite database automatically if missing
+- [x] Seed the dummy user and dummy Today tasks on first create
+- [x] Session login checks the users table (still `user` / `password`)
+- [x] `GET` / `PUT` the open day for the signed-in user
+- [x] `GET` / `PUT` the user's five categories (rename + reorder only)
+- [x] Move a task between categories (or include that in the day save)
+- [x] Move a task to another date
+- [x] All mutating routes require a valid session
+- [x] Backend unit tests with a temp SQLite file, no Docker required for the unit suite
 
 **Tests / success criteria**
 

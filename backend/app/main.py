@@ -1,10 +1,24 @@
+from contextlib import asynccontextmanager
+from datetime import date
 from pathlib import Path
+from typing import Annotated
 
-from fastapi import FastAPI, HTTPException, Request, Response
-from pydantic import BaseModel
+from fastapi import Depends, FastAPI, HTTPException, Request, Response
+from pydantic import BaseModel, Field
+
+from app.board import BadInput, NotFound
+from app.db import (
+    get_day,
+    get_user,
+    init_db,
+    list_categories,
+    move_task,
+    put_day,
+    replace_categories,
+)
+from app.passwords import verify_password
 
 SESSION_COOKIE = "session"
-SESSION_VALUE = "user"
 
 ROOT = Path(__file__).resolve().parent.parent
 STATIC_CANDIDATES = [
@@ -15,7 +29,14 @@ STATIC_DIR = next(
     path for path in STATIC_CANDIDATES if (path / "index.html").exists()
 )
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    init_db()
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
 
 
 class LoginBody(BaseModel):
@@ -23,8 +44,42 @@ class LoginBody(BaseModel):
     password: str
 
 
+class CategoryBody(BaseModel):
+    id: str
+    label: str
+
+
+class CategoriesBody(BaseModel):
+    categories: list[CategoryBody]
+
+
+class BoardBody(BaseModel):
+    board: dict
+
+
+class MoveBody(BaseModel):
+    taskId: str = Field(min_length=1)
+    toDate: str
+
+
 def is_authenticated(request: Request) -> bool:
-    return request.cookies.get(SESSION_COOKIE) == SESSION_VALUE
+    username = request.cookies.get(SESSION_COOKIE)
+    return bool(username) and get_user(username) is not None
+
+
+def current_user(request: Request) -> str:
+    username = request.cookies.get(SESSION_COOKIE)
+    if not username or get_user(username) is None:
+        raise HTTPException(status_code=401, detail="Not signed in")
+    return username
+
+
+def parse_date(value: str) -> str:
+    try:
+        date.fromisoformat(value)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail="Invalid date") from exc
+    return value
 
 
 @app.get("/api/hello")
@@ -39,11 +94,12 @@ def session_status(request: Request) -> dict[str, bool]:
 
 @app.post("/api/login")
 def login(body: LoginBody, response: Response) -> dict[str, bool]:
-    if body.username != "user" or body.password != "password":
+    user = get_user(body.username)
+    if user is None or not verify_password(body.password, user["password_hash"]):
         raise HTTPException(status_code=401, detail="Invalid username or password")
     response.set_cookie(
         SESSION_COOKIE,
-        SESSION_VALUE,
+        user["username"],
         httponly=True,
         samesite="lax",
     )
@@ -53,6 +109,52 @@ def login(body: LoginBody, response: Response) -> dict[str, bool]:
 @app.post("/api/logout")
 def logout(response: Response) -> dict[str, bool]:
     response.delete_cookie(SESSION_COOKIE)
+    return {"ok": True}
+
+
+@app.get("/api/categories")
+def read_categories(username: Annotated[str, Depends(current_user)]):
+    return {"categories": list_categories(username)}
+
+
+@app.put("/api/categories")
+def write_categories(body: CategoriesBody, username: Annotated[str, Depends(current_user)]):
+    try:
+        categories = replace_categories(
+            username, [item.model_dump() for item in body.categories]
+        )
+    except BadInput as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return {"categories": categories}
+
+
+@app.get("/api/days/{day}")
+def read_day(day: str, username: Annotated[str, Depends(current_user)]):
+    return {"date": parse_date(day), "board": get_day(username, day)}
+
+
+@app.put("/api/days/{day}")
+def write_day(day: str, body: BoardBody, username: Annotated[str, Depends(current_user)]):
+    parse_date(day)
+    try:
+        board = put_day(username, day, body.board)
+    except BadInput as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return {"date": day, "board": board}
+
+
+@app.post("/api/days/{day}/move-task")
+def write_move(
+    day: str, body: MoveBody, username: Annotated[str, Depends(current_user)]
+):
+    parse_date(day)
+    parse_date(body.toDate)
+    try:
+        move_task(username, day, body.taskId, body.toDate)
+    except BadInput as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except NotFound as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
     return {"ok": True}
 
 
