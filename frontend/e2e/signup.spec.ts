@@ -9,18 +9,27 @@ test("creates an account and keeps data private", async ({ page }) => {
   await page.getByRole("button", { name: "Log out" }).click();
   await expect(page.getByTestId("login-form")).toBeVisible();
 
+  const email = `other-${Date.now()}@example.com`;
   await page.getByRole("button", { name: "Create an account" }).click();
   await expect(page.getByTestId("signup-form")).toBeVisible();
-  await page.getByLabel("Email").fill("other@example.com");
+  await page.getByLabel("Email").fill(email);
   await page.getByLabel("Password").fill("password1");
   await page.getByRole("button", { name: "Create account" }).click();
 
+  await expect(page.getByTestId("login-form")).toBeVisible();
+  await expect(
+    page.getByText("Account created successfully. Please sign in."),
+  ).toBeVisible();
+  await expect(page.getByTestId("today-board")).toHaveCount(0);
+
+  await page.getByLabel("Password").fill("password1");
+  await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page.getByTestId("today-board")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Health / Exercise" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Morning stretch" })).toHaveCount(0);
 
   await page.getByTestId("add-task-health").click();
-  await page.getByLabel("Title").fill("User B walk");
+  await page.getByLabel("Task").fill("User B walk");
   await page.getByTestId("column-health").getByRole("button", { name: "Add", exact: true }).click();
   await expect(page.getByRole("heading", { name: "User B walk" })).toBeVisible();
 

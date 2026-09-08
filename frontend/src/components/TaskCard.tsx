@@ -9,16 +9,9 @@ type TaskCardProps = {
   onToggle: () => void;
   onSave: (input: { title: string; details: string }) => void;
   onDelete: () => void;
-  onMoveToDate: (date: string) => void;
 };
 
-export function TaskCard({
-  task,
-  onToggle,
-  onSave,
-  onDelete,
-  onMoveToDate,
-}: TaskCardProps) {
+export function TaskCard({ task, onToggle, onSave, onDelete }: TaskCardProps) {
   const [editing, setEditing] = useState(false);
 
   if (editing) {
@@ -71,17 +64,6 @@ export function TaskCard({
         </div>
       </div>
       <div className="mt-3 flex flex-wrap items-center justify-end gap-3 text-sm">
-        <label className="text-sage">
-          <input
-            type="date"
-            data-testid={`move-date-${task.id}`}
-            aria-label={`Move ${task.title} to date`}
-            onChange={(event) => {
-              if (event.target.value) onMoveToDate(event.target.value);
-            }}
-            className="rounded border border-sage/40 bg-paper px-1 py-0.5 text-xs text-forest"
-          />
-        </label>
         <button
           type="button"
           onClick={() => setEditing(true)}

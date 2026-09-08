@@ -18,13 +18,15 @@ describe("GuideSidebar", () => {
   it("shows planning-guide empty copy", () => {
     render(<GuideSidebar date="2026-09-07" onBoard={() => undefined} />);
 
-    expect(screen.getByText("AI Chat")).toBeInTheDocument();
+    expect(screen.getByText("AI Assistant")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "This day" })).toBeInTheDocument();
     expect(
       screen.getByText("Chat with AI about the day you have open."),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Ask the AI about this day. It can help you prioritize/),
+      screen.getByText(
+        /Get help prioritizing tasks, deciding what to focus on, breaking/,
+      ),
     ).toBeInTheDocument();
   });
 

@@ -39,5 +39,4 @@ Authenticated routes (cookie required):
 
 - `GET` / `PUT` `/api/categories`
 - `GET` / `PUT` `/api/days/{YYYY-MM-DD}`
-- `POST` `/api/days/{YYYY-MM-DD}/move-task`
 - `POST` `/api/chat` — planning guide for one date; optional full board replace; history is memory-only and cleared on logout

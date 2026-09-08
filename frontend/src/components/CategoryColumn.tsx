@@ -21,7 +21,6 @@ type CategoryColumnProps = {
   onToggle: (taskId: string) => void;
   onSave: (taskId: string, input: { title: string; details: string }) => void;
   onDelete: (taskId: string) => void;
-  onMoveToDate: (taskId: string, date: string) => void;
 };
 
 export function CategoryColumn({
@@ -37,7 +36,6 @@ export function CategoryColumn({
   onToggle,
   onSave,
   onDelete,
-  onMoveToDate,
 }: CategoryColumnProps) {
   const [adding, setAdding] = useState(false);
   const [renaming, setRenaming] = useState(false);
@@ -128,7 +126,6 @@ export function CategoryColumn({
             onToggle={() => onToggle(task.id)}
             onSave={(input) => onSave(task.id, input)}
             onDelete={() => onDelete(task.id)}
-            onMoveToDate={(date) => onMoveToDate(task.id, date)}
           />
         ))}
         {adding ? (

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { TaskCard } from "./TaskCard";
@@ -23,7 +23,6 @@ describe("TaskCard", () => {
         onToggle={onToggle}
         onSave={() => undefined}
         onDelete={() => undefined}
-        onMoveToDate={() => undefined}
       />,
     );
 
@@ -41,13 +40,12 @@ describe("TaskCard", () => {
         onToggle={() => undefined}
         onSave={onSave}
         onDelete={() => undefined}
-        onMoveToDate={() => undefined}
       />,
     );
 
     await user.click(screen.getByRole("button", { name: "Edit Morning stretch" }));
-    await user.clear(screen.getByLabelText("Title"));
-    await user.type(screen.getByLabelText("Title"), "Yoga");
+    await user.clear(screen.getByLabelText("Task"));
+    await user.type(screen.getByLabelText("Task"), "Yoga");
     await user.click(screen.getByRole("button", { name: "Save" }));
 
     expect(onSave).toHaveBeenCalledWith({
@@ -66,31 +64,11 @@ describe("TaskCard", () => {
         onToggle={() => undefined}
         onSave={() => undefined}
         onDelete={onDelete}
-        onMoveToDate={() => undefined}
       />,
     );
 
     await user.click(screen.getByRole("button", { name: "Delete Morning stretch" }));
     expect(onDelete).toHaveBeenCalledTimes(1);
-  });
-
-  it("moves the task to another date", () => {
-    const onMoveToDate = vi.fn();
-
-    render(
-      <TaskCard
-        task={task}
-        onToggle={() => undefined}
-        onSave={() => undefined}
-        onDelete={() => undefined}
-        onMoveToDate={onMoveToDate}
-      />,
-    );
-
-    fireEvent.change(screen.getByLabelText("Move Morning stretch to date"), {
-      target: { value: "2026-09-08" },
-    });
-    expect(onMoveToDate).toHaveBeenCalledWith("2026-09-08");
   });
 
   it("shows completed tasks with strikethrough", () => {
@@ -100,7 +78,6 @@ describe("TaskCard", () => {
         onToggle={() => undefined}
         onSave={() => undefined}
         onDelete={() => undefined}
-        onMoveToDate={() => undefined}
       />,
     );
 

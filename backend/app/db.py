@@ -4,7 +4,6 @@ import sqlite3
 from pathlib import Path
 
 from app.board import (
-    CATEGORY_IDS,
     DEFAULT_CATEGORIES,
     BadInput,
     NotFound,
@@ -161,33 +160,6 @@ def put_day(email: str, date: str, board: object) -> dict:
         user_id = _user_id(conn, email)
         _save_board(conn, user_id, date, cleaned)
         return cleaned
-
-
-def move_task(email: str, from_date: str, task_id: str, to_date: str) -> None:
-    if from_date == to_date:
-        return
-    with connect() as conn:
-        user_id = _user_id(conn, email)
-        source = _load_board(conn, user_id, from_date)
-        moving = None
-        from_category = None
-        for category_id in CATEGORY_IDS:
-            for task in source[category_id]:
-                if task["id"] == task_id:
-                    moving = task
-                    from_category = category_id
-                    break
-            if moving is not None:
-                break
-        if moving is None or from_category is None:
-            raise NotFound("Task not found")
-        source[from_category] = [
-            task for task in source[from_category] if task["id"] != task_id
-        ]
-        target = _load_board(conn, user_id, to_date)
-        target[from_category] = [*target[from_category], moving]
-        _save_board(conn, user_id, from_date, source)
-        _save_board(conn, user_id, to_date, target)
 
 
 def _migrate_users(conn: sqlite3.Connection) -> None:

@@ -18,7 +18,6 @@ const unused = {
   onToggle: () => undefined,
   onSave: () => undefined,
   onDelete: () => undefined,
-  onMoveToDate: () => undefined,
 };
 
 describe("CategoryColumn", () => {

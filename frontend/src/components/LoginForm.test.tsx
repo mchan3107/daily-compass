@@ -62,6 +62,10 @@ describe("LoginForm", () => {
     await user.click(screen.getByRole("button", { name: "Create account" }));
 
     expect(signup).toHaveBeenCalledWith("new@example.com", "password1");
-    expect(onSuccess).toHaveBeenCalledTimes(1);
+    expect(onSuccess).not.toHaveBeenCalled();
+    expect(screen.getByTestId("login-form")).toBeInTheDocument();
+    expect(
+      screen.getByText("Account created successfully. Please sign in."),
+    ).toBeInTheDocument();
   });
 });

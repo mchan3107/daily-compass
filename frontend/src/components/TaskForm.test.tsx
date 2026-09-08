@@ -16,7 +16,7 @@ describe("TaskForm", () => {
       />,
     );
 
-    await user.type(screen.getByLabelText("Details"), "Some notes");
+    await user.type(screen.getByLabelText("Notes (Optional)"), "Some notes");
     await user.click(screen.getByRole("button", { name: "Add" }));
 
     expect(onSubmit).not.toHaveBeenCalled();

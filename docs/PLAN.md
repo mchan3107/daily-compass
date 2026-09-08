@@ -80,7 +80,6 @@ Point FastAPI at a static Next.js export and extend the existing Today UI.
 - Playwright: Today loads with five categories and dummy tasks
 - Playwright: prev/next and date picker change the visible day; Today remains the default
 - Playwright: rename a category; reorder categories; both persist across a day change in the same session
-- Playwright: move a task to another date; it leaves Today and appears on that date
 - Existing add/edit/complete/delete/drag tests still pass
 - After `scripts/start`, opening `/` in the browser shows Daily Compass
 
@@ -145,7 +144,6 @@ Implement the signed-off schema and Daily Compass API.
 - [x] `GET` / `PUT` the open day for the signed-in user
 - [x] `GET` / `PUT` the user's five categories (rename + reorder only)
 - [x] Move a task between categories (or include that in the day save)
-- [x] Move a task to another date
 - [x] All mutating routes require a valid session
 - [x] Backend unit tests with a temp SQLite file, no Docker required for the unit suite
 
@@ -154,7 +152,7 @@ Implement the signed-off schema and Daily Compass API.
 - Missing DB is created and seeded
 - Load/save day round-trips tasks, completion, and order
 - Category rename/reorder persist; adding/removing a category is rejected
-- Moving a task to another date removes it from the source day and adds it to the target day
+- Tasks stay on the day they were created
 - Unauthenticated API calls fail
 - Seed data covers all five categories
 

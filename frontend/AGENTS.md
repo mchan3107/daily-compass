@@ -60,7 +60,7 @@ e2e/              Playwright specs
 
 `src/lib/dates.ts`: local `YYYY-MM-DD` helpers.
 
-`src/lib/days.ts`: `boardForDate`, `setBoard`, `moveTaskToDate` for tests and helpers.
+`src/lib/days.ts`: `boardForDate` and `setBoard` for tests and helpers.
 
 `src/lib/dummy-tasks.ts` is the expected seed shape for tests. `src/lib/tasks.ts` has board helpers. Blank titles are ignored. Completing a task does not move it.
 
@@ -77,18 +77,18 @@ Keep the cream / forest / sage / gold look in `src/app/globals.css`. Headings us
 - `GuideSidebar`: session chat for the open day; applies a returned board immediately.
 - `CategoryColumn`: droppable column, rename, move left/right, add-task form.
 - `SortableTaskCard`: drag handle (`data-testid="drag-{id}"`) wrapping `TaskCard`.
-- `TaskCard`: checkbox, title, details, move-to-date, edit, delete.
+- `TaskCard`: checkbox, title, details, edit, delete.
 - `TaskForm`: title (required) and details.
 
-Test ids: `login-form`, `signup-form`, `logout`, `today-board`, `column-{categoryId}`, `add-task-{categoryId}`, `task-{id}`, `drag-{id}`, `prev-day`, `next-day`, `date-picker`, `move-date-{id}`, `guide-sidebar`, `guide-messages`, `guide-input`, `guide-send`, `guide-empty`, `guide-message`.
+Test ids: `login-form`, `signup-form`, `logout`, `today-board`, `column-{categoryId}`, `add-task-{categoryId}`, `task-{id}`, `drag-{id}`, `prev-day`, `next-day`, `date-picker`, `guide-sidebar`, `guide-messages`, `guide-input`, `guide-send`, `guide-empty`, `guide-message`.
 
 ## Tests
 
 - `src/lib/*.test.ts`: helpers, dummy seed, days, categories, dates, API client
 - `src/components/*.test.tsx`: TaskCard, TaskForm, TodayHeader, CategoryColumn, GuideSidebar
-- `e2e/today.spec.ts`: signs in, then header, categories, dummy tasks, CRUD, drag, day nav, rename/reorder, move-to-date
+- `e2e/today.spec.ts`: signs in, then header, categories, dummy tasks, CRUD, drag, day nav, rename/reorder
 - `e2e/login.spec.ts`: login required, bad password, logout
-- `e2e/signup.spec.ts`: create account, short password, data stays private per user
+- `e2e/signup.spec.ts`: create account, then sign in; short password; data stays private per user
 - `e2e/persist.spec.ts`: edit/rename/day nav survive reload
 - `e2e/guide.spec.ts`: mocked chat reply, board update, logout clears messages
 

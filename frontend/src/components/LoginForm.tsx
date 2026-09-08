@@ -12,20 +12,33 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
   const emailId = useId();
   const passwordId = useId();
   const isSignup = mode === "signup";
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    const message = isSignup
-      ? await signup(email, password)
-      : await login(email, password);
+    if (isSignup) {
+      const message = await signup(email, password);
+      if (message) {
+        setError(message);
+        setNotice("");
+        return;
+      }
+      setError("");
+      setPassword("");
+      setMode("login");
+      setNotice("Account created successfully. Please sign in.");
+      return;
+    }
+    const message = await login(email, password);
     if (message) {
       setError(message);
       return;
     }
     setError("");
+    setNotice("");
     onSuccess();
   }
 
@@ -75,6 +88,11 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             className="rounded-lg border border-sage/40 bg-paper px-3 py-2 font-sans text-sm normal-case text-forest outline-none focus:border-forest"
           />
         </label>
+        {notice ? (
+          <p role="status" className="text-sm text-forest">
+            {notice}
+          </p>
+        ) : null}
         {error ? (
           <p role="alert" className="text-sm text-clay">
             {error}
@@ -106,6 +124,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             onClick={() => {
               setMode("signup");
               setError("");
+              setNotice("");
             }}
             className="text-sm text-forest underline-offset-4 hover:underline"
           >

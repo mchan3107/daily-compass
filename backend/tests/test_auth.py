@@ -43,12 +43,17 @@ def test_unknown_user_is_rejected(client):
     assert response.status_code == 401
 
 
-def test_signup_creates_account_and_signs_in(client):
+def test_signup_creates_account_without_signing_in(client):
     response = sign_up(client, "new@example.com")
     assert response.status_code == 200
-    cookie = response.headers["set-cookie"].lower()
-    assert "session=" in cookie
-    assert "httponly" in cookie
+    assert "set-cookie" not in response.headers
+    assert client.get("/api/session").json() == {"authenticated": False}
+
+    login = client.post(
+        "/api/login",
+        json={"email": "new@example.com", "password": "password1"},
+    )
+    assert login.status_code == 200
     assert client.get("/api/session").json() == {"authenticated": True}
 
 
@@ -67,7 +72,6 @@ def test_signup_rejects_invalid_email(client):
 
 def test_signup_rejects_duplicate_email(client):
     assert sign_up(client, "dup@example.com").status_code == 200
-    client.post("/api/logout")
     response = sign_up(client, "Dup@example.com")
     assert response.status_code == 409
 
@@ -97,6 +101,11 @@ def test_users_cannot_see_each_others_days(client):
     client.post("/api/logout")
 
     assert sign_up(client, "other@example.com").status_code == 200
+    login = client.post(
+        "/api/login",
+        json={"email": "other@example.com", "password": "password1"},
+    )
+    assert login.status_code == 200
     board = client.get("/api/days/2026-09-07").json()["board"]
     titles = [task["title"] for bucket in board.values() for task in bucket]
     assert "User A secret" not in titles

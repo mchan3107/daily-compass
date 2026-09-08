@@ -6,7 +6,7 @@ from typing import Annotated
 from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from pydantic import BaseModel, Field
 
-from app.board import BadInput, NotFound
+from app.board import BadInput
 from app.db import (
     DuplicateEmail,
     create_user,
@@ -14,7 +14,6 @@ from app.db import (
     get_user,
     init_db,
     list_categories,
-    move_task,
     put_day,
     replace_categories,
 )
@@ -61,11 +60,6 @@ class BoardBody(BaseModel):
     board: dict
 
 
-class MoveBody(BaseModel):
-    taskId: str = Field(min_length=1)
-    toDate: str
-
-
 class ChatBody(BaseModel):
     date: str
     message: str = Field(min_length=1)
@@ -102,19 +96,13 @@ def session_status(request: Request) -> dict[str, bool]:
 
 
 @app.post("/api/signup")
-def signup(body: AuthBody, response: Response) -> dict[str, bool]:
+def signup(body: AuthBody) -> dict[str, bool]:
     try:
-        email = create_user(body.email, body.password)
+        create_user(body.email, body.password)
     except DuplicateEmail as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc
     except BadInput as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
-    response.set_cookie(
-        SESSION_COOKIE,
-        email,
-        httponly=True,
-        samesite="lax",
-    )
     return {"ok": True}
 
 
@@ -170,21 +158,6 @@ def write_day(day: str, body: BoardBody, username: Annotated[str, Depends(curren
     except BadInput as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     return {"date": day, "board": board}
-
-
-@app.post("/api/days/{day}/move-task")
-def write_move(
-    day: str, body: MoveBody, username: Annotated[str, Depends(current_user)]
-):
-    parse_date(day)
-    parse_date(body.toDate)
-    try:
-        move_task(username, day, body.taskId, body.toDate)
-    except BadInput as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-    except NotFound as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
-    return {"ok": True}
 
 
 @app.post("/api/chat")

@@ -14,8 +14,8 @@ test("keeps an edited task after reload", async ({ page }) => {
   await signIn(page);
 
   await page.getByRole("button", { name: "Edit Call Mom" }).click();
-  await page.getByLabel("Title").fill("Call Dad");
-  await page.getByLabel("Details").fill("Share the week.");
+  await page.getByLabel("Task").fill("Call Dad");
+  await page.getByLabel("Notes (Optional)").fill("Share the week.");
   await page.getByRole("button", { name: "Save", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Call Dad" })).toBeVisible();
 

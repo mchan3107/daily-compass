@@ -9,7 +9,6 @@ import { TodayHeader } from "./TodayHeader";
 import {
   getCategories,
   getDay,
-  moveTaskDate,
   saveCategories,
   saveDay,
 } from "@/lib/api";
@@ -169,11 +168,6 @@ export function TodayBoard({ onLogout }: { onLogout: () => void }) {
                 onDelete={(taskId) =>
                   updateBoard((current) => deleteTask(current, taskId))
                 }
-                onMoveToDate={(taskId, date) => {
-                  void moveTaskDate(activeDate, taskId, date).then(() => {
-                    setBoard((current) => deleteTask(current, taskId));
-                  });
-                }}
               />
             ))}
           </div>

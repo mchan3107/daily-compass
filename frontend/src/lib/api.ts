@@ -72,16 +72,3 @@ export async function sendChat(
     board: data.board ?? null,
   };
 }
-
-export async function moveTaskDate(
-  fromDate: string,
-  taskId: string,
-  toDate: string,
-): Promise<void> {
-  await fetch(`/api/days/${fromDate}/move-task`, {
-    method: "POST",
-    credentials: "include",
-    headers: jsonHeaders,
-    body: JSON.stringify({ taskId, toDate }),
-  });
-}

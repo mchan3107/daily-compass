@@ -49,7 +49,7 @@ export function GuideSidebar({ date, onBoard }: GuideSidebarProps) {
     >
       <header className="mb-3 border-b border-sage/30 pb-3">
         <p className="text-xs font-medium tracking-[0.2em] text-gold uppercase">
-          AI Chat
+          AI Assistant
         </p>
         <h2 className="mt-1 font-serif text-2xl text-forest">This day</h2>
         <p className="mt-1 text-sm text-warm-gray">
@@ -63,8 +63,8 @@ export function GuideSidebar({ date, onBoard }: GuideSidebarProps) {
       >
         {messages.length === 0 && !pending ? (
           <p data-testid="guide-empty" className="text-sm text-warm-gray">
-            Ask the AI about this day. It can help you prioritize, add, or
-            reshape tasks here.
+            Get help prioritizing tasks, deciding what to focus on, breaking
+            down goals, and reorganizing your day.
           </p>
         ) : null}
         {messages.map((message, index) => (

@@ -32,7 +32,7 @@ export function TaskForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2">
       <label className="flex flex-col gap-1 text-xs tracking-wide text-warm-gray uppercase" htmlFor={titleId}>
-        Title
+        Task
         <input
           id={titleId}
           name="title"
@@ -42,7 +42,7 @@ export function TaskForm({
         />
       </label>
       <label className="flex flex-col gap-1 text-xs tracking-wide text-warm-gray uppercase" htmlFor={detailsId}>
-        Details
+        Notes (Optional)
         <textarea
           id={detailsId}
           name="details"

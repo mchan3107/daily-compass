@@ -97,10 +97,9 @@ Categories live in `categories`. Everything about tasks on a day lives in that d
 | Open a day | `GET` that `date`. Missing row → empty board (all five arrays empty). Do not create a row. |
 | Create / edit / delete / complete / reorder / move between categories | `PUT` the full board for the open date. One JSON blob replaces the previous one. |
 | Rename / reorder categories | `PUT` the five category rows. Reject if the id set is not exactly the five stable ids. |
-| Move a task to another date | One transaction: load source board, remove the task, save source; load target board (or empty), append the task to the same `categoryId` list, save target. If source and target are the same date, no-op. |
 | AI replacement of the open day | Same as day `PUT`. Other dates and categories are not touched. |
 
-Move-to-date is the only write that touches two day rows. Cross-category drag stays inside one day's JSON, so it does not need its own table or endpoint if the frontend saves the whole board.
+Cross-category drag stays inside one day's JSON. Tasks cannot be moved to another date.
 
 Unfinished tasks do not roll over. Other days stay empty until the user (or seed) writes them.
 
@@ -123,7 +122,7 @@ When the database file is created:
 
 3. Do **not** seed a day row at create time using the server clock. Docker and the browser can disagree on "today". Instead, on the first `GET` day for the demo user (`user@example.com`), if they still have zero `days` rows, insert the dummy board for the date the client asked for. That puts the seed on the demo user's Today. Accounts created with signup start with empty days.
 
-Dummy board content matches `frontend/src/lib/dummy-tasks.ts` (same titles, details, ids, all `completed: false`, at least one task in every category). After that first GET, later dates stay empty until the user adds tasks or moves a task there.
+Dummy board content matches `frontend/src/lib/dummy-tasks.ts` (same titles, details, ids, all `completed: false`, at least one task in every category). After that first GET, later dates stay empty until the user adds tasks there.
 
 If the file already exists, do not re-seed. Tests use a temp SQLite file so they get a fresh seed each run.
 
@@ -144,7 +143,7 @@ If the file already exists, do not re-seed. Tests use a temp SQLite file so they
 
 All of these except signup/login/logout/hello/session require a valid session. The session email must exist in `users`.
 
-- `POST /api/signup` — `{ "email", "password" }` (password at least 8 characters). Sets the session cookie.
+- `POST /api/signup` — `{ "email", "password" }` (password at least 8 characters). Does not set a session cookie.
 - `POST /api/login` — `{ "email", "password" }`. Sets the session cookie.
 - `POST /api/logout` — clears the session cookie and in-memory chat history
 - `GET /api/session` — `{ "authenticated": true|false }`
@@ -152,5 +151,4 @@ All of these except signup/login/logout/hello/session require a valid session. T
 - `PUT /api/categories` — same body; rename/reorder only
 - `GET /api/days/{date}` — `{ "date", "board" }`; empty if missing; may seed dummy on first GET
 - `PUT /api/days/{date}` — `{ "board": ... }`
-- `POST /api/days/{date}/move-task` — `{ "taskId", "toDate" }` in one transaction
 - `POST /api/chat` — `{ "date", "message" }` returns `{ "reply", "board" }`. `board` is a full replacement of that day or `null`. History is in memory and cleared on logout.

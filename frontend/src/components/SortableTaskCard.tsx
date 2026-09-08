@@ -13,7 +13,6 @@ type SortableTaskCardProps = {
   onToggle: () => void;
   onSave: (input: { title: string; details: string }) => void;
   onDelete: () => void;
-  onMoveToDate: (date: string) => void;
 };
 
 export function SortableTaskCard({
@@ -22,7 +21,6 @@ export function SortableTaskCard({
   onToggle,
   onSave,
   onDelete,
-  onMoveToDate,
 }: SortableTaskCardProps) {
   const { ref, handleRef, isDragging, isDropTarget } = useSortable({
     id: task.id,
@@ -62,7 +60,6 @@ export function SortableTaskCard({
           onToggle={onToggle}
           onSave={onSave}
           onDelete={onDelete}
-          onMoveToDate={onMoveToDate}
         />
       </div>
     </div>

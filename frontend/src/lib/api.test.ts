@@ -4,7 +4,6 @@ import { CATEGORIES } from "./categories";
 import {
   getCategories,
   getDay,
-  moveTaskDate,
   saveCategories,
   saveDay,
   sendChat,
@@ -66,17 +65,6 @@ describe("api", () => {
       credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ board: dummyBoard }),
-    });
-  });
-
-  it("moveTaskDate posts the task and target date", async () => {
-    vi.mocked(fetch).mockResolvedValue({ ok: true } as Response);
-    await moveTaskDate("2026-09-07", "health-1", "2026-09-08");
-    expect(fetch).toHaveBeenCalledWith("/api/days/2026-09-07/move-task", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ taskId: "health-1", toDate: "2026-09-08" }),
     });
   });
 

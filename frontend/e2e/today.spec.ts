@@ -53,8 +53,8 @@ test("adds a task to a category", async ({ page }) => {
   await signIn(page);
 
   await page.getByTestId("add-task-health").click();
-  await page.getByLabel("Title").fill("Evening swim");
-  await page.getByLabel("Details").fill("Easy laps at the pool.");
+  await page.getByLabel("Task").fill("Evening swim");
+  await page.getByLabel("Notes (Optional)").fill("Easy laps at the pool.");
   await page.getByTestId("column-health").getByRole("button", { name: "Add", exact: true }).click();
 
   await expect(
@@ -66,8 +66,8 @@ test("edits a task title and details", async ({ page }) => {
   await signIn(page);
 
   await page.getByRole("button", { name: "Edit Call Mom" }).click();
-  await page.getByLabel("Title").fill("Call Dad");
-  await page.getByLabel("Details").fill("Share the week.");
+  await page.getByLabel("Task").fill("Call Dad");
+  await page.getByLabel("Notes (Optional)").fill("Share the week.");
   await page.getByRole("button", { name: "Save", exact: true }).click();
 
   await expect(page.getByRole("heading", { name: "Call Dad" })).toBeVisible();
@@ -209,16 +209,4 @@ test("renames and reorders categories across days", async ({ page }) => {
     "Hobbies",
     "School / Career",
   ]);
-});
-
-test("moves a task to another date", async ({ page }) => {
-  await signIn(page);
-  const tomorrow = shift(dateKey(), 1);
-
-  await page.getByLabel("Move Morning stretch to date").fill(tomorrow);
-  await expect(page.getByTestId("task-health-1")).toHaveCount(0);
-
-  await page.getByTestId("date-picker").fill(tomorrow);
-  await expect(page.getByTestId("task-health-1")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Walk after lunch" })).toHaveCount(0);
 });
