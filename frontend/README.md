@@ -1,15 +1,14 @@
-# Kanban Studio
+# Daily Compass
 
-## Run
+A personal planner for today, with previous/next day navigation.
 
 ```bash
-npm install
 npm run dev
 ```
 
-## Tests
+Open [http://localhost:3000](http://localhost:3000).
 
 ```bash
-npm run test:unit
+npm test
 npm run test:e2e
 ```

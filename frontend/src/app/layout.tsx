@@ -1,32 +1,29 @@
 import type { Metadata } from "next";
-import { Manrope, Space_Grotesk } from "next/font/google";
+import { Fraunces, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 
-const displayFont = Space_Grotesk({
-  variable: "--font-display",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
 });
 
-const bodyFont = Manrope({
-  variable: "--font-body",
+const sourceSans = Source_Sans_3({
+  variable: "--font-source-sans",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "Kanban Studio",
-  description: "A focused, single-board kanban workspace.",
+  title: "Daily Compass",
+  description: "A calm planner for today.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en">
-      <body className={`${displayFont.variable} ${bodyFont.variable}`}>
-        {children}
-      </body>
+    <html
+      lang="en"
+      className={`${fraunces.variable} ${sourceSans.variable} h-full antialiased`}
+    >
+      <body className="min-h-full font-sans">{children}</body>
     </html>
   );
 }
