@@ -1,3 +1,7 @@
+import hashlib
+import hmac
+import os
+import secrets
 from contextlib import asynccontextmanager
 from datetime import date
 from pathlib import Path
@@ -22,6 +26,7 @@ from app.openrouter import OpenRouterError
 from app.passwords import verify_password
 
 SESSION_COOKIE = "session"
+SESSION_SECRET = os.environ.get("COMPASS_SECRET_KEY", secrets.token_hex(32)).encode()
 
 ROOT = Path(__file__).resolve().parent.parent
 STATIC_CANDIDATES = [
@@ -65,13 +70,33 @@ class ChatBody(BaseModel):
     message: str = Field(min_length=1)
 
 
+def sign_session(email: str) -> str:
+    signature = hmac.new(SESSION_SECRET, email.encode(), hashlib.sha256).hexdigest()
+    return f"{email}.{signature}"
+
+
+def verify_session(token: str) -> str | None:
+    email, _, signature = token.rpartition(".")
+    if not email:
+        return None
+    expected = hmac.new(SESSION_SECRET, email.encode(), hashlib.sha256).hexdigest()
+    if not hmac.compare_digest(signature, expected):
+        return None
+    return email
+
+
+def session_email(request: Request) -> str | None:
+    token = request.cookies.get(SESSION_COOKIE)
+    return verify_session(token) if token else None
+
+
 def is_authenticated(request: Request) -> bool:
-    email = request.cookies.get(SESSION_COOKIE)
+    email = session_email(request)
     return bool(email) and get_user(email) is not None
 
 
 def current_user(request: Request) -> str:
-    email = request.cookies.get(SESSION_COOKIE)
+    email = session_email(request)
     if not email or get_user(email) is None:
         raise HTTPException(status_code=401, detail="Not signed in")
     return email
@@ -113,7 +138,7 @@ def login(body: AuthBody, response: Response) -> dict[str, bool]:
         raise HTTPException(status_code=401, detail="Invalid email or password")
     response.set_cookie(
         SESSION_COOKIE,
-        user["email"],
+        sign_session(user["email"]),
         httponly=True,
         samesite="lax",
     )
@@ -122,7 +147,7 @@ def login(body: AuthBody, response: Response) -> dict[str, bool]:
 
 @app.post("/api/logout")
 def logout(request: Request, response: Response) -> dict[str, bool]:
-    email = request.cookies.get(SESSION_COOKIE)
+    email = session_email(request)
     if email:
         clear_history(email)
     response.delete_cookie(SESSION_COOKIE)
