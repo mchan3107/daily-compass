@@ -1,6 +1,6 @@
 # Daily Compass
 
-A personal daily planner. I built it to organize my tasks while keeping the areas of life I care about in view, so for now it's split into five life categories: Physical Health, Relationships, Mental Wellbeing, Hobbies & Fun, and School & Career.
+Daily Compass is a personal daily planner I built after realizing I was often focusing too much on one area of my life while neglecting others. I wanted a way to organize my daily tasks while reminding myself that balance across different parts of life is just as important as productivity. The app organizes tasks into five categories: Physical Health, Relationships, Mental Wellbeing, Hobbies & Fun, and School & Career.
 
 ## Features
 
