@@ -2,6 +2,11 @@
 
 Daily Compass is a personal daily planner I built after realizing I was often focusing too much on one area of my life while neglecting others. I wanted a way to organize my daily tasks while reminding myself that balance across different parts of life is just as important as productivity. The app organizes tasks into five categories: Physical Health, Relationships, Mental Wellbeing, Hobbies & Fun, and School & Career.
 
+**Live demo:** https://daily-compass.onrender.com/ (demo account: `user@example.com` / `password`)
+**GitHub:** https://github.com/mchan3107/daily-compass
+
+> The free Render tier spins down after 15 minutes of inactivity. The first request after that can take a moment to wake it up, and the SQLite data stored on that instance may reset.
+
 ## Features
 
 - Email/password sign up and sign in, with per-user data
