@@ -1,7 +1,8 @@
 import json
 import os
-import sqlite3
-from pathlib import Path
+
+import psycopg
+from psycopg.rows import dict_row
 
 from app.board import (
     DEFAULT_CATEGORIES,
@@ -14,12 +15,11 @@ from app.board import (
 )
 from app.passwords import hash_password
 
-DEFAULT_DB = Path(__file__).resolve().parent.parent / "data" / "compass.db"
 SEED_EMAIL = "user@example.com"
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     email TEXT NOT NULL UNIQUE,
     password_hash TEXT NOT NULL
 );
@@ -47,24 +47,22 @@ class DuplicateEmail(Exception):
     pass
 
 
-def db_path() -> Path:
-    return Path(os.environ.get("COMPASS_DB", DEFAULT_DB))
+def database_url() -> str:
+    url = os.environ.get("DATABASE_URL", "").strip()
+    if not url:
+        raise RuntimeError("DATABASE_URL is missing")
+    return url
 
 
-def connect() -> sqlite3.Connection:
-    conn = sqlite3.connect(db_path())
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA foreign_keys = ON")
-    return conn
+def connect() -> psycopg.Connection:
+    return psycopg.connect(database_url(), row_factory=dict_row)
 
 
 def init_db() -> None:
-    path = db_path()
-    path.parent.mkdir(parents=True, exist_ok=True)
     with connect() as conn:
-        conn.executescript(SCHEMA)
+        conn.execute(SCHEMA)
         _migrate_users(conn)
-        count = conn.execute("SELECT COUNT(*) FROM users").fetchone()[0]
+        count = conn.execute("SELECT COUNT(*) AS count FROM users").fetchone()["count"]
         if count == 0:
             _seed(conn)
 
@@ -89,23 +87,23 @@ def create_user(email: str, password: str) -> str:
     with connect() as conn:
         try:
             conn.execute(
-                "INSERT INTO users (email, password_hash) VALUES (?, ?)",
+                "INSERT INTO users (email, password_hash) VALUES (%s, %s)",
                 (cleaned, hash_password(password)),
             )
-        except sqlite3.IntegrityError as exc:
+        except psycopg.errors.UniqueViolation as exc:
             raise DuplicateEmail("An account with this email already exists") from exc
         user_id = conn.execute(
-            "SELECT id FROM users WHERE email = ?", (cleaned,)
-        ).fetchone()[0]
+            "SELECT id FROM users WHERE email = %s", (cleaned,)
+        ).fetchone()["id"]
         _insert_categories(conn, user_id)
     return cleaned
 
 
-def get_user(email: str) -> sqlite3.Row | None:
+def get_user(email: str) -> dict | None:
     cleaned = normalize_email(email)
     with connect() as conn:
         return conn.execute(
-            "SELECT id, email, password_hash FROM users WHERE email = ?",
+            "SELECT id, email, password_hash FROM users WHERE email = %s",
             (cleaned,),
         ).fetchone()
 
@@ -116,7 +114,7 @@ def list_categories(email: str) -> list[dict[str, str]]:
         rows = conn.execute(
             """
             SELECT id, label FROM categories
-            WHERE user_id = ?
+            WHERE user_id = %s
             ORDER BY sort_order
             """,
             (user_id,),
@@ -132,8 +130,8 @@ def replace_categories(email: str, items: object) -> list[dict[str, str]]:
             conn.execute(
                 """
                 UPDATE categories
-                SET label = ?, sort_order = ?
-                WHERE user_id = ? AND id = ?
+                SET label = %s, sort_order = %s
+                WHERE user_id = %s AND id = %s
                 """,
                 (label, order, user_id, category_id),
             )
@@ -144,9 +142,9 @@ def get_day(email: str, date: str) -> dict:
     with connect() as conn:
         user_id = _user_id(conn, email)
         count = conn.execute(
-            "SELECT COUNT(*) FROM days WHERE user_id = ?",
+            "SELECT COUNT(*) AS count FROM days WHERE user_id = %s",
             (user_id,),
-        ).fetchone()[0]
+        ).fetchone()["count"]
         if count == 0 and normalize_email(email) == SEED_EMAIL:
             board = dummy_board()
             _save_board(conn, user_id, date, board)
@@ -162,41 +160,46 @@ def put_day(email: str, date: str, board: object) -> dict:
         return cleaned
 
 
-def _migrate_users(conn: sqlite3.Connection) -> None:
-    columns = [row[1] for row in conn.execute("PRAGMA table_info(users)")]
+def _migrate_users(conn: psycopg.Connection) -> None:
+    columns = [
+        row["column_name"]
+        for row in conn.execute(
+            "SELECT column_name FROM information_schema.columns WHERE table_name = 'users'"
+        )
+    ]
     if "username" in columns and "email" not in columns:
         conn.execute("ALTER TABLE users RENAME COLUMN username TO email")
     conn.execute(
-        "UPDATE users SET email = ? WHERE email = ?",
+        "UPDATE users SET email = %s WHERE email = %s",
         (SEED_EMAIL, "user"),
     )
 
 
-def _seed(conn: sqlite3.Connection) -> None:
+def _seed(conn: psycopg.Connection) -> None:
     conn.execute(
-        "INSERT INTO users (email, password_hash) VALUES (?, ?)",
+        "INSERT INTO users (email, password_hash) VALUES (%s, %s)",
         (SEED_EMAIL, hash_password("password")),
     )
     user_id = conn.execute(
-        "SELECT id FROM users WHERE email = ?", (SEED_EMAIL,)
-    ).fetchone()[0]
+        "SELECT id FROM users WHERE email = %s", (SEED_EMAIL,)
+    ).fetchone()["id"]
     _insert_categories(conn, user_id)
 
 
-def _insert_categories(conn: sqlite3.Connection, user_id: int) -> None:
+def _insert_categories(conn: psycopg.Connection, user_id: int) -> None:
     for order, (category_id, label) in enumerate(DEFAULT_CATEGORIES):
         conn.execute(
             """
             INSERT INTO categories (user_id, id, label, sort_order)
-            VALUES (?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s)
             """,
             (user_id, category_id, label, order),
         )
 
 
-def _user_id(conn: sqlite3.Connection, email: str) -> int:
+def _user_id(conn: psycopg.Connection, email: str) -> int:
     row = conn.execute(
-        "SELECT id FROM users WHERE email = ?",
+        "SELECT id FROM users WHERE email = %s",
         (normalize_email(email),),
     ).fetchone()
     if row is None:
@@ -204,9 +207,9 @@ def _user_id(conn: sqlite3.Connection, email: str) -> int:
     return row["id"]
 
 
-def _load_board(conn: sqlite3.Connection, user_id: int, date: str) -> dict:
+def _load_board(conn: psycopg.Connection, user_id: int, date: str) -> dict:
     row = conn.execute(
-        "SELECT board FROM days WHERE user_id = ? AND date = ?",
+        "SELECT board FROM days WHERE user_id = %s AND date = %s",
         (user_id, date),
     ).fetchone()
     if row is None:
@@ -215,13 +218,13 @@ def _load_board(conn: sqlite3.Connection, user_id: int, date: str) -> dict:
 
 
 def _save_board(
-    conn: sqlite3.Connection, user_id: int, date: str, board: dict
+    conn: psycopg.Connection, user_id: int, date: str, board: dict
 ) -> None:
     payload = json.dumps(board)
     conn.execute(
         """
-        INSERT INTO days (user_id, date, board) VALUES (?, ?, ?)
-        ON CONFLICT(user_id, date) DO UPDATE SET board = excluded.board
+        INSERT INTO days (user_id, date, board) VALUES (%s, %s, %s)
+        ON CONFLICT (user_id, date) DO UPDATE SET board = excluded.board
         """,
         (user_id, date, payload),
     )

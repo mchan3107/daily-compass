@@ -5,6 +5,7 @@ requires-python = ">=3.13"
 dependencies = [
     "fastapi[standard]",
     "httpx",
+    "psycopg[binary]>=3.3.6",
 ]
 
 [dependency-groups]
