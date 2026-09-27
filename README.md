@@ -2,10 +2,10 @@
 
 Daily Compass is a personal daily planner I built after realizing I was often focusing too much on one area of my life while neglecting others. I wanted a way to organize my daily tasks while reminding myself that balance across different parts of life is just as important as productivity. The app organizes tasks into five categories: Physical Health, Relationships, Mental Wellbeing, Hobbies & Fun, and School & Career.
 
-**Live demo:** https://daily-compass.onrender.com/ (demo account: `user@example.com` / `password`)
+**Live demo:** https://dailycompass.onrender.com/ (demo account: `user@example.com` / `password`)
 **GitHub:** https://github.com/mchan3107/daily-compass
 
-> The free Render tier spins down after 15 minutes of inactivity. The first request after that can take a moment to wake it up, and the SQLite data stored on that instance may reset.
+> The free Render tier spins down after 15 minutes of inactivity. The first request after that can take a moment to wake it up.
 
 ## Features
 
@@ -19,7 +19,7 @@ Daily Compass is a personal daily planner I built after realizing I was often fo
 ## Tech Stack
 
 - **Frontend:** Next.js (static export), React, Tailwind CSS, dnd-kit, Vitest + Testing Library, Playwright
-- **Backend:** FastAPI (Python), SQLite, PBKDF2-SHA256 password hashing, signed session cookies
+- **Backend:** FastAPI (Python), PostgreSQL (Supabase), PBKDF2-SHA256 password hashing, signed session cookies
 - **AI:** OpenRouter
 - Single Docker container; FastAPI serves the static frontend build and the API
 
