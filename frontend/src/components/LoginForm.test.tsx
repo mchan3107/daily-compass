@@ -68,4 +68,10 @@ describe("LoginForm", () => {
       screen.getByText("Account created successfully. Please sign in."),
     ).toBeInTheDocument();
   });
+
+  it("can start in signup mode for the create account page", () => {
+    render(<LoginForm initialMode="signup" onSuccess={vi.fn()} />);
+
+    expect(screen.getByTestId("signup-form")).toBeInTheDocument();
+  });
 });

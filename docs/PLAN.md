@@ -234,3 +234,70 @@ Add the chat UI and wire it to Part 9.
 - Conversation survives multiple turns in the same session and resets on logout
 - Board updates from the AI appear immediately
 - Normal e2e/unit tests still mock OpenRouter
+
+---
+
+## Part 11: Landing page
+
+Build a public landing page for logged out users in the existing cream, forest, sage, and gold visual style. The landing page and its auth entry points are frontend-only. Do not change the authenticated app, authentication logic, or backend.
+
+### Step 11.1: Public header and hero
+
+- [x] Show the public landing page at `/` for logged out users
+- [x] Add a Daily Compass wordmark at the top left that links to `/`
+- [x] Add Sign In and Create Account links at the top right
+- [x] Add the hero heading: `Five areas. One balanced day.`
+- [x] Add the hero description: `Organize your day around the five areas of life that matter most to you.`
+- [x] Keep the current cream, forest, sage, and gold style
+- [x] Do not add content below the hero in this step
+
+**Tests / success criteria**
+
+- A logged out visit to `/` shows the header and hero, not the authenticated board
+- The Daily Compass wordmark has an `href` of `/`
+- The hero matches the approved heading and description exactly
+- New user-facing landing copy contains no apostrophes
+- Existing authenticated app behavior is unchanged
+
+### Step 11.2: Dedicated authentication views
+
+- [x] Add a separate `/sign-in` view that reuses the existing sign-in functionality and styling
+- [x] Add a separate `/create-account` view that reuses the existing signup functionality and styling
+- [x] Put a Daily Compass wordmark in the top left of both views, linking to `/`
+- [x] Keep existing authentication requests, validation, errors, and successful sign-in behavior unchanged
+- [x] Wait for the session check before showing either the landing page or authenticated board after sign-in
+
+**Tests / success criteria**
+
+- The Sign In link from `/` navigates to `/sign-in` and shows the existing sign-in form
+- The Create Account link from `/` navigates to `/create-account` and shows the existing signup form
+- The wordmark on both auth views returns to `/`
+- After sign-in, neither the landing page nor authenticated board appears until the session check finishes
+- Existing login, rejected login, signup, and logout tests still pass
+- No backend or authenticated-app files change
+
+### Step 11.3: What Makes Daily Compass Different
+
+- [ ] Add a What Makes Daily Compass Different section below the hero
+- [ ] Explain that Daily Compass treats life as more than one long task list
+- [ ] Show how planning across five areas encourages attention to different parts of life
+- [ ] Explain that limiting the planner to five areas keeps it focused and simple
+- [ ] Explain that users can rename and rearrange their five areas around what matters to them
+- [ ] Add a simple How It Works section
+- [ ] Keep the existing visual style and responsive layout
+- [ ] Confirm new user-facing landing copy contains no apostrophes before implementation
+
+**Tests / success criteria**
+
+- Logged out users can see What Makes Daily Compass Different and How It Works below the hero
+- The section explains the five-area approach, its focused scope, and that users can rename and rearrange their areas
+- Sections remain readable and usable on desktop and mobile viewports
+- The public page does not expose authenticated task data
+- Existing authenticated-app and authentication tests continue to pass
+
+**Part 11 completion criteria**
+
+- Logged out users have a complete public landing page with the approved header, hero, What Makes Daily Compass Different section, and How It Works section
+- Sign In and Create Account use dedicated views while reusing the existing authentication functionality
+- All new landing copy has no apostrophes
+- The authenticated app and backend remain unchanged

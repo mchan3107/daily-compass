@@ -5,10 +5,16 @@ import { login, signup } from "@/lib/auth";
 
 type LoginFormProps = {
   onSuccess: () => void;
+  initialMode?: "login" | "signup";
+  showWordmark?: boolean;
 };
 
-export function LoginForm({ onSuccess }: LoginFormProps) {
-  const [mode, setMode] = useState<"login" | "signup">("login");
+export function LoginForm({
+  onSuccess,
+  initialMode = "login",
+  showWordmark = true,
+}: LoginFormProps) {
+  const [mode, setMode] = useState<"login" | "signup">(initialMode);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -48,7 +54,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         <p className="text-sm font-medium tracking-[0.25em] text-gold uppercase">
           Welcome
         </p>
-        <h1 className="mt-2 font-serif text-4xl text-forest">Daily Compass</h1>
+        {showWordmark ? <h1 className="mt-2 font-serif text-4xl text-forest">Daily Compass</h1> : null}
         <p className="mt-3 text-warm-gray">
           {isSignup ? "Create an account to plan your day." : "Sign in to plan your day."}
         </p>
