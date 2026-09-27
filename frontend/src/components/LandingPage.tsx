@@ -3,9 +3,9 @@ import Link from "next/link";
 const previewAreas = [
   { name: "Physical Health", task: "Morning walk", color: "bg-[#d8e0d0]" },
   { name: "Relationships", task: "Call Mom", color: "bg-[#f0e1d8]" },
-  { name: "Mental Wellbeing", task: "Read twenty pages", color: "bg-[#e4e3d2]" },
-  { name: "Hobbies & Fun", task: "Sketch in the garden", color: "bg-[#e5dced]" },
-  { name: "School & Career", task: "Outline the project brief", color: "bg-[#e9dfc7]" },
+  { name: "Mental Wellbeing", task: "Journal for 10 minutes", color: "bg-[#e4e3d2]" },
+  { name: "Hobbies & Fun", task: "Practice guitar", color: "bg-[#e5dced]" },
+  { name: "School & Career", task: "Finish problem set", color: "bg-[#e9dfc7]" },
 ];
 
 export function LandingPage() {
@@ -18,6 +18,10 @@ export function LandingPage() {
       <div
         aria-hidden="true"
         className="pointer-events-none absolute top-[32rem] left-[-9rem] h-72 w-72 rounded-full bg-gold/10 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-[38rem] right-[12%] hidden h-56 w-72 rounded-[60%_40%_55%_45%] bg-sage-soft/25 blur-2xl lg:block"
       />
 
       <header className="relative mx-auto flex max-w-6xl items-center justify-between">
@@ -60,7 +64,22 @@ export function LandingPage() {
               aria-hidden="true"
               className="absolute bottom-0 left-0 h-24 w-24 rounded-full bg-sage-soft/70"
             />
-            <div className="relative rounded-[2rem] bg-paper p-3 shadow-[0_24px_60px_rgba(47,74,60,0.16)] ring-1 ring-sage/30 sm:p-4">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute right-[-1rem] bottom-[-1.5rem] h-64 w-36 origin-bottom-right scale-75 sm:right-[-2rem] sm:bottom-[-1rem] sm:h-72 sm:w-40 sm:scale-90 lg:right-[-3.5rem] lg:bottom-[-0.5rem] lg:h-80 lg:w-44 lg:scale-100"
+            >
+              <span className="absolute right-9 bottom-12 h-56 w-px origin-bottom rotate-[-15deg] bg-forest/45" />
+              <span className="absolute right-13 bottom-12 h-48 w-px origin-bottom rotate-[16deg] bg-forest/35" />
+              <span className="absolute right-7 bottom-12 h-40 w-px origin-bottom rotate-[-36deg] bg-forest/30" />
+              <span className="absolute right-16 bottom-29 h-14 w-7 rotate-[-42deg] rounded-[100%_0_100%_0] bg-sage/70" />
+              <span className="absolute right-2 bottom-35 h-15 w-7 rotate-[38deg] rounded-[0_100%_0_100%] bg-sage/65" />
+              <span className="absolute right-17 bottom-45 h-13 w-7 rotate-[-34deg] rounded-[100%_0_100%_0] bg-sage-soft" />
+              <span className="absolute right-1 bottom-51 h-15 w-7 rotate-[40deg] rounded-[0_100%_0_100%] bg-sage/55" />
+              <span className="absolute right-20 bottom-57 h-12 w-6 rotate-[-38deg] rounded-[100%_0_100%_0] bg-sage/60" />
+              <span className="absolute right-4 bottom-63 h-14 w-6 rotate-[38deg] rounded-[0_100%_0_100%] bg-sage-soft/90" />
+              <span className="absolute right-7 bottom-0 h-14 w-18 rounded-b-2xl rounded-t-md bg-forest/45 ring-1 ring-forest/20" />
+            </div>
+            <div className="relative z-10 rounded-[2rem] bg-paper p-3 shadow-[0_24px_60px_rgba(47,74,60,0.16)] ring-1 ring-sage/30 sm:p-4">
               <div className="flex items-center justify-between rounded-[1.4rem] bg-forest px-4 py-3 text-paper">
                 <div>
                   <p className="text-xs tracking-[0.16em] text-paper/70 uppercase">Today</p>
@@ -101,16 +120,16 @@ export function LandingPage() {
             </div>
             <div className="grid gap-6 text-lg leading-relaxed text-warm-gray sm:text-xl">
               <p>
-                Daily Compass gives you a simple way to organize your day across the different
-                areas of life that matter to you.
+                Daily Compass gives you a simple and visual way to organize your day across the
+                different areas of life that matter to you.
               </p>
               <p>
                 Instead of one long task list, your day is organized into five areas, making it
-                easier to see where your attention is going and what may need more of it.
+                easy to see your plans at a glance and understand where your attention is going.
               </p>
               <p>
-                When you need help deciding what to focus on, the AI assistant can look at your
-                day and help you think through your priorities.
+                Your AI assistant can help you plan and prioritize your day, add or move tasks,
+                and make changes with you when your plans change.
               </p>
             </div>
           </div>
@@ -132,7 +151,7 @@ export function LandingPage() {
               [
                 "03",
                 "Ask your AI assistant",
-                "Get help prioritizing tasks, planning your day, or deciding what to focus on next.",
+                "Get help planning your day, prioritizing tasks, and adding, moving, or updating tasks for you.",
               ],
             ].map(([number, title, description]) => (
               <div key={number} className="border-t border-gold pt-5">
