@@ -9,6 +9,7 @@ Daily Compass is a personal daily planner I built after realizing I was often fo
 
 ## Features
 
+- Public landing page with separate sign in and create account views
 - Email/password sign up and sign in, with per-user data
 - Today view by default, with previous/next day navigation and a date picker
 - Tasks: create, edit, delete, complete, drag-and-drop reorder, and move between categories
@@ -21,11 +22,11 @@ Daily Compass is a personal daily planner I built after realizing I was often fo
 - **Frontend:** Next.js (static export), React, Tailwind CSS, dnd-kit, Vitest + Testing Library, Playwright
 - **Backend:** FastAPI (Python), PostgreSQL (Supabase), PBKDF2-SHA256 password hashing, signed session cookies
 - **AI:** OpenRouter
-- Single Docker container; FastAPI serves the static frontend build and the API
+- Single Docker container; FastAPI serves the static frontend build and API, with Supabase providing PostgreSQL externally
 
 ## Setup
 
-Requires Docker and an `OPENROUTER_API_KEY` in a `.env` file at the workspace root (parent of this folder).
+Requires Docker and a PostgreSQL `DATABASE_URL` in a `.env` file at the workspace root (parent of this folder). Add `OPENROUTER_API_KEY` to enable the AI planning guide.
 
 ```bash
 ./scripts/start.sh   # Mac/Linux
@@ -38,10 +39,9 @@ Stop with `./scripts/stop.sh` (or `scripts\stop.ps1`).
 
 ## Testing
 
-```bash
-# Backend (from backend/)
-uv run pytest
+Backend tests are currently being migrated from SQLite to PostgreSQL.
 
+```bash
 # Frontend (from frontend/)
 npm test          # unit tests
 npm run test:e2e  # Playwright end-to-end
