@@ -276,28 +276,39 @@ Build a public landing page for logged out users in the existing cream, forest, 
 - Existing login, rejected login, signup, and logout tests still pass
 - No backend or authenticated-app files change
 
-### Step 11.3: What Makes Daily Compass Different
+### Step 11.3: Complete the landing page
 
-- [ ] Add a What Makes Daily Compass Different section below the hero
-- [ ] Explain that Daily Compass treats life as more than one long task list
-- [ ] Show how planning across five areas encourages attention to different parts of life
-- [ ] Explain that limiting the planner to five areas keeps it focused and simple
-- [ ] Explain that users can rename and rearrange their five areas around what matters to them
-- [ ] Add a simple How It Works section
-- [ ] Keep the existing visual style and responsive layout
-- [ ] Confirm new user-facing landing copy contains no apostrophes before implementation
+- [x] Use the shared visual reference as inspiration, not as a design to copy
+- [x] Refine the hero into a polished two-column layout
+- [x] Keep the approved heading and description on the left
+- [x] Add a decorative preview of a Daily Compass day on the right
+- [x] Base the preview on the real Daily Compass interface and use the current five life areas as example content
+- [x] Keep the preview decorative only and do not change the authenticated app
+- [x] Add a Why use Daily Compass section below the hero
+- [x] Explain that Daily Compass organizes the day across areas of life that matter to the user
+- [x] Explain that five areas make it easier to see where attention is going and what may need more of it
+- [x] Explain that the AI assistant can help users think through priorities
+- [x] Add a How It Works section with Plan your day, Organize your tasks, and Ask your AI assistant steps
+- [x] Use subtle shapes and visual details to make the page feel polished without making it overly decorative
+- [x] Keep the cream, forest, sage, and gold visual style
+- [x] Keep the existing Daily Compass typography, functionality, and app design
+- [x] Keep the page responsive on desktop and mobile
+- [x] Confirm new user-facing copy contains no apostrophes before implementation
+- [x] Get user approval before making a major design decision not covered by this plan
 
 **Tests / success criteria**
 
-- Logged out users can see What Makes Daily Compass Different and How It Works below the hero
-- The section explains the five-area approach, its focused scope, and that users can rename and rearrange their areas
-- Sections remain readable and usable on desktop and mobile viewports
+- The hero shows the approved copy alongside a decorative five-area Daily Compass preview on desktop
+- The hero and preview remain readable and usable on mobile viewports
+- Logged out users can see Why use Daily Compass and How It Works below the hero
+- The section explains the five-area approach and AI planning support
+- How It Works shows the approved Plan your day, Organize your tasks, and Ask your AI assistant steps
 - The public page does not expose authenticated task data
 - Existing authenticated-app and authentication tests continue to pass
 
 **Part 11 completion criteria**
 
-- Logged out users have a complete public landing page with the approved header, hero, What Makes Daily Compass Different section, and How It Works section
+- Logged out users have a complete public landing page with the approved header, hero, Why use Daily Compass section, and How It Works section
 - Sign In and Create Account use dedicated views while reusing the existing authentication functionality
 - All new landing copy has no apostrophes
 - The authenticated app and backend remain unchanged

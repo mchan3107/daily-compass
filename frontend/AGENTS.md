@@ -93,4 +93,3 @@ Test ids: `login-form`, `signup-form`, `logout`, `today-board`, `column-{categor
 - `e2e/guide.spec.ts`: mocked chat reply, board update, logout clears messages
 
 `TodayBoard` loads the open date from the API and PUTs after edits. The guide sidebar posts `/api/chat`.
-

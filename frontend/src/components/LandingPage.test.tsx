@@ -26,5 +26,19 @@ describe("LandingPage", () => {
         "Organize your day around the five areas of life that matter most to you.",
       ),
     ).toBeInTheDocument();
+    expect(screen.getByLabelText("Daily Compass day preview")).toBeInTheDocument();
+    for (const area of [
+      "Physical Health",
+      "Relationships",
+      "Mental Wellbeing",
+      "Hobbies & Fun",
+      "School & Career",
+    ]) {
+      expect(screen.getByText(area)).toBeInTheDocument();
+    }
+    expect(
+      screen.getByRole("heading", { name: "Why use Daily Compass" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "How It Works" })).toBeInTheDocument();
   });
 });
